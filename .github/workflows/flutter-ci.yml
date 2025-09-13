@@ -1,0 +1,81 @@
+name: Flutter CI/CD for Android, iOS, Windows
+
+# กำหนดให้ workflow ทำงานเมื่อมีการ push หรือ pull request ไปยัง branch 'main'
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # ใช้ Matrix Strategy เพื่อรันบน OS ที่แตกต่างกันสำหรับแต่ละแพลตฟอร์ม
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # 1. Checkout โค้ดจาก repository ของคุณ
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. ติดตั้ง Java (จำเป็นสำหรับ Flutter)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. ติดตั้ง Flutter SDK
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. ดาวน์โหลด dependencies ของโปรเจกต์
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 5. วิเคราะห์โค้ดเพื่อหาข้อผิดพลาดและสไตล์ที่ไม่ถูกต้อง
+      - name: Analyze project
+        run: flutter analyze
+
+      # --- Build สำหรับ Android (จะรันบน Ubuntu runner เท่านั้น) ---
+      - name: Build Android APK
+        if: matrix.os == 'ubuntu-latest'
+        run: flutter build apk --release
+
+      - name: Upload Android APK
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      # --- Build สำหรับ Windows (จะรันบน Windows runner เท่านั้น) ---
+      - name: Build Windows
+        if: matrix.os == 'windows-latest'
+        run: flutter build windows --release
+
+      - name: Upload Windows Build
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows/runner/Release/
+
+      # --- Build สำหรับ iOS (จะรันบน macOS runner เท่านั้น) ---
+      - name: Build iOS
+        if: matrix.os == 'macos-latest'
+        # สร้างไฟล์ .ipa โดยไม่ต้องมี code signing (สำหรับทดสอบ)
+        run: flutter build ipa --release --no-codesign
+
+      - name: Upload iOS Build
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build/ios/ipa/

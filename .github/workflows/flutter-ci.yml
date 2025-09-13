@@ -1,11 +1,8 @@
 name: Flutter CI/CD for Android, iOS, Windows
 
-# กำหนดให้ workflow ทำงานเมื่อมีการ push หรือ pull request ไปยัง branch 'main'
+# เปลี่ยน trigger ให้ทำงานเมื่อกดสั่งรันด้วยตนเองเท่านั้น
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:

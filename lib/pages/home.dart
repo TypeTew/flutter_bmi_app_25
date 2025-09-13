@@ -26,16 +26,19 @@ class _HomePageState extends State<HomePage> {
   String bmiResult = '';
   String resultText = '';
   String interpretation = '';
+  Color? resultColor = Color(0xFF69FABD);
 
-  Map<String, String> getBMIResults() {
+  Map<String, dynamic> getBMIResults() {
     double bmi = weight / pow(height / 100, 2);
     String localResultText = '';
     String localInterpretation = '';
+    Color resultColor = Color(0xFF69FABD);
 
     if (bmi >= 25) {
       localResultText = 'Overweight';
       localInterpretation =
           'You have a higher than normal body weight. Try to exercise more.';
+      resultColor = Color(0xFFF87474); // สีแดง
     } else if (bmi > 18.5) {
       localResultText = 'Normal';
       localInterpretation = 'You have a normal body weight. Good job!';
@@ -43,12 +46,14 @@ class _HomePageState extends State<HomePage> {
       localResultText = 'Underweight';
       localInterpretation =
           'You have a lower than normal body weight. You can eat a bit more.';
+      resultColor = Color(0xFFFFAA4C); // สีส้ม
     }
 
     return {
       'bmiResult': bmi.toStringAsFixed(1),
       'resultText': localResultText,
       'interpretation': localInterpretation,
+      'resultColor': resultColor,
     };
   }
 
@@ -210,6 +215,7 @@ class _HomePageState extends State<HomePage> {
                 bmiResult = results['bmiResult']!;
                 resultText = results['resultText']!;
                 interpretation = results['interpretation']!;
+                resultColor = results['resultColor'] as Color;
               });
 
               // 2. ใช้ Navigator.push เพื่อเปิดหน้าใหม่และส่งค่าไป
@@ -221,6 +227,7 @@ class _HomePageState extends State<HomePage> {
                     bmiResult: bmiResult,
                     resultText: resultText,
                     interpretation: interpretation,
+                    resultColor: resultColor!,
                   ),
                 ),
               );

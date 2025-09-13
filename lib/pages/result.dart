@@ -8,11 +8,13 @@ class ResultPage extends StatelessWidget {
     required this.bmiResult,
     required this.resultText,
     required this.interpretation,
+    required this.resultColor,
   });
 
   final String bmiResult;
   final String resultText;
   final String interpretation;
+  final Color resultColor;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,9 @@ class ResultPage extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     resultText.toUpperCase(),
-                    style: const TextStyle(
-                      color: Color(0xFF69FABD), // สีเขียวจาก Gradient
+                    style: TextStyle(
+                      //color: Color(0xFF69FABD), // สีเขียวจาก Gradient
+                      color: resultColor,
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
                     ),

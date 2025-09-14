@@ -1,46 +1,37 @@
 name: Build Android APK
 
-# ทำงานเมื่อกดสั่งรันด้วยตนเองเท่านั้น
 on:
   workflow_dispatch:
 
 jobs:
   build-android:
-    # ใช้ runner ของ GitHub ที่เป็น Ubuntu เวอร์ชั่นล่าสุด
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout โค้ดจาก repository ของคุณ
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. ติดตั้ง Java (จำเป็นสำหรับ Flutter)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3. ติดตั้ง Flutter SDK
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      # 4. ดาวน์โหลด dependencies ของโปรเจกต์
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. วิเคราะห์โค้ดเพื่อหาข้อผิดพลาดและสไตล์ที่ไม่ถูกต้อง
       - name: Analyze project
         run: flutter analyze
 
-      # 6. สร้างไฟล์ Release APK
       - name: Build Android APK
         run: flutter build apk --release
 
-      # 7. อัปโหลดไฟล์ APK ที่สร้างเสร็จแล้วเป็น Artifact
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:

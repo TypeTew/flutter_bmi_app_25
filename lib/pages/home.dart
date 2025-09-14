@@ -84,9 +84,14 @@ class _HomePageState extends State<HomePage> {
                     colour: selectedGender == Gender.male
                         ? kActiveCardColour
                         : kInactiveCardColour,
-                    cardChild: const IconContent(
+                    cardChild: IconContent(
                       icon: FontAwesomeIcons.mars,
                       label: 'MALE',
+                      // กำหนดสีตามเงื่อนไข
+                      color: selectedGender == Gender.male
+                          ? Colors
+                                .blue // สีฟ้าเมื่อถูกเลือก
+                          : const Color(0xFF8D8E98), // สีเทาเมื่อไม่ถูกเลือก
                     ),
                   ),
                 ),
@@ -100,45 +105,18 @@ class _HomePageState extends State<HomePage> {
                     colour: selectedGender == Gender.female
                         ? kActiveCardColour
                         : kInactiveCardColour,
-                    cardChild: const IconContent(
+                    cardChild: IconContent(
                       icon: FontAwesomeIcons.venus,
                       label: 'FEMALE',
+                      // กำหนดสีตามเงื่อนไข
+                      color: selectedGender == Gender.female
+                          ? Colors
+                                .pink // สีชมพูเมื่อถูกเลือก
+                          : const Color(0xFF8D8E98), // สีเทาเมื่อไม่ถูกเลือก
                     ),
                   ),
                 ),
               ],
-            ),
-          ),
-          Expanded(
-            child: ReusableCard(
-              colour: kActiveCardColour,
-              cardChild: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text('HEIGHT', style: kLabelTextStyle),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
-                      Text(height.toString(), style: kNumberTextStyle),
-                      const Text('cm', style: kLabelTextStyle),
-                    ],
-                  ),
-                  Slider(
-                    value: height.toDouble(),
-                    min: 120.0,
-                    max: 220.0,
-                    activeColor: const Color(0xFFEB1555),
-                    inactiveColor: const Color(0xFF8D8E98),
-                    onChanged: (double newValue) {
-                      setState(() {
-                        height = newValue.round();
-                      });
-                    },
-                  ),
-                ],
-              ),
             ),
           ),
           Expanded(
@@ -205,6 +183,38 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
+            ),
+          ),
+          Expanded(
+            child: ReusableCard(
+              colour: kActiveCardColour,
+              cardChild: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('HEIGHT', style: kLabelTextStyle),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Text(height.toString(), style: kNumberTextStyle),
+                      const Text('cm', style: kLabelTextStyle),
+                    ],
+                  ),
+                  Slider(
+                    value: height.toDouble(),
+                    min: 120.0,
+                    max: 220.0,
+                    activeColor: const Color(0xFFEB1555),
+                    inactiveColor: const Color(0xFF8D8E98),
+                    onChanged: (double newValue) {
+                      setState(() {
+                        height = newValue.round();
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           GestureDetector(
